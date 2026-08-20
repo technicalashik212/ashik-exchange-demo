@@ -1,678 +1,448 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ashik Exchange — Demo</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ashik Exchange Demo</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7f5;
+  color:#173b38;
+  padding-bottom:80px
+}
+.demo{
+  background:#173b38;
+  color:white;
+  text-align:center;
+  padding:14px;
+  font-weight:bold
+}
+header{
+  background:white;
+  padding:20px;
+  border-bottom:1px solid #ddd
+}
+main{max-width:700px;margin:auto;padding:18px}
+.page{display:none}
+.page.active{display:block}
 
-    body {
-      background: #f4f7f5;
-      color: #173b38;
-      padding-bottom: 80px;
-    }
+.card{
+  background:white;
+  border-radius:18px;
+  padding:20px;
+  margin:15px 0;
+  box-shadow:0 3px 15px #00000010
+}
+.hero{
+  background:#dfeee8;
+  padding:25px;
+  border-radius:20px
+}
+.balance{
+  background:#173b38;
+  color:white;
+  padding:25px;
+  border-radius:20px
+}
+.balance h1{font-size:38px;margin:10px 0}
 
-    .demo {
-      background: #173b38;
-      color: white;
-      text-align: center;
-      padding: 9px;
-      font-size: 13px;
-      font-weight: bold;
-      letter-spacing: .5px;
-    }
+input,button,select{
+  width:100%;
+  padding:13px;
+  margin:7px 0;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:16px
+}
+button{
+  background:#173b38;
+  color:white;
+  border:0;
+  font-weight:bold
+}
+button.red{background:#a52b2b}
+button.green{background:#18864b}
 
-    header {
-      background: white;
-      padding: 18px;
-      border-bottom: 1px solid #ddd;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .logo {
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    .sub {
-      color: #777;
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-    main {
-      max-width: 650px;
-      margin: auto;
-      padding: 18px;
-    }
-
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    .hero {
-      background: #dfeee8;
-      padding: 22px;
-      border-radius: 18px;
-      margin-bottom: 16px;
-    }
-
-    .hero h1 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .balance {
-      background: #173b38;
-      color: white;
-      padding: 22px;
-      border-radius: 18px;
-      margin-bottom: 16px;
-    }
-
-    .balance small {
-      opacity: .75;
-    }
-
-    .amount {
-      font-size: 30px;
-      font-weight: bold;
-      margin: 8px 0;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .card {
-      background: white;
-      padding: 18px;
-      border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.06);
-      margin-bottom: 14px;
-    }
-
-    .card h3 {
-      margin-bottom: 10px;
-    }
-
-    .coin {
-      display: flex;
-      justify-content: space-between;
-      padding: 13px 0;
-      border-bottom: 1px solid #eee;
-    }
-
-    .coin:last-child {
-      border-bottom: none;
-    }
-
-    .green {
-      color: #15803d;
-    }
-
-    .red {
-      color: #dc2626;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #ccd8d4;
-      border-radius: 10px;
-      margin: 7px 0 12px;
-      background: white;
-    }
-
-    button {
-      border: none;
-      border-radius: 10px;
-      padding: 13px 18px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .primary {
-      background: #173b38;
-      color: white;
-      width: 100%;
-    }
-
-    .buy {
-      background: #198754;
-      color: white;
-      width: 100%;
-    }
-
-    .sell {
-      background: #dc3545;
-      color: white;
-      width: 100%;
-    }
-
-    .status {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 20px;
-      background: #dcfce7;
-      color: #166534;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .warning {
-      background: #fff7d6;
-      color: #765b00;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 12px;
-      margin-bottom: 14px;
-    }
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid #eee;
-    }
-
-    .row:last-child {
-      border-bottom: none;
-    }
-
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      border-top: 1px solid #ddd;
-      display: flex;
-      justify-content: space-around;
-      padding: 9px 4px;
-      z-index: 20;
-    }
-
-    nav button {
-      background: transparent;
-      color: #555;
-      padding: 8px 5px;
-      font-size: 11px;
-    }
-
-    nav button.active {
-      color: #173b38;
-      font-weight: bold;
-    }
-
-    .notice {
-      background: #eef7f3;
-      border-left: 4px solid #173b38;
-      padding: 12px;
-      margin-top: 10px;
-      font-size: 12px;
-      border-radius: 6px;
-    }
-  </style>
+nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  border-top:1px solid #ddd;
+  padding:8px 2px;
+  z-index:10
+}
+nav button{
+  background:white;
+  color:#333;
+  font-size:12px;
+  margin:0;
+  padding:7px 3px
+}
+nav button span{
+  display:block;
+  font-size:20px
+}
+.small{color:#777;font-size:13px}
+.admin-title{color:#a52b2b}
+</style>
 </head>
 
 <body>
 
-  <div class="demo">
-    ⚠ DEMO / SIMULATION — NO REAL FUNDS
+<div class="demo">
+⚠️ DEMO / SIMULATION — NO REAL FUNDS
+</div>
+
+<header>
+  <h2>Ashik Exchange</h2>
+  <div class="small">Practice crypto dashboard</div>
+</header>
+
+<main>
+
+<!-- MARKET -->
+<section id="market" class="page active">
+  <div class="hero">
+    <h1>A calmer market view.</h1>
+    <p>Explore simulated crypto prices.</p>
   </div>
 
-  <header>
-    <div class="logo">Ashik Exchange</div>
-    <div class="sub">Practice crypto dashboard</div>
-  </header>
+  <div class="balance">
+    <div>Demo Portfolio Value</div>
+    <h1 id="portfolio">$12,840.76</h1>
+    <div>+4.28% DEMO</div>
+  </div>
+
+  <div class="card">
+    <h2>Markets</h2>
+    <p>🟠 Bitcoin <b id="btcMarket">$67,420</b></p>
+    <hr>
+    <p>🔵 Ethereum <b id="ethMarket">$3,420</b></p>
+    <hr>
+    <p>🟣 Solana <b id="solMarket">$182</b></p>
+  </div>
+</section>
+
+<!-- TRADE -->
+<section id="trade" class="page">
+  <h2>Demo Trade</h2>
+
+  <div class="card">
+    <label>Asset</label>
+    <select>
+      <option>BTC/USDT</option>
+      <option>ETH/USDT</option>
+      <option>SOL/USDT</option>
+    </select>
+
+    <label>Amount</label>
+    <input id="tradeAmount" type="number" placeholder="Enter demo amount">
+
+    <button class="green" onclick="demoTrade('BUY')">BUY — DEMO</button>
+    <button class="red" onclick="demoTrade('SELL')">SELL — DEMO</button>
+
+    <p id="tradeMessage" class="small"></p>
+  </div>
+</section>
+
+<!-- WALLET -->
+<section id="wallet" class="page">
+  <h2>Demo Wallet</h2>
+
+  <div class="card">
+    <h3>Demo USDT</h3>
+    <h2 id="usdt">8420.00 USDT</h2>
+  </div>
+
+  <div class="card">
+    <h3>Demo BTC</h3>
+    <h2 id="btc">0.0421 BTC</h2>
+  </div>
+</section>
+
+<!-- KYC -->
+<section id="kyc" class="page">
+  <h2>Demo KYC</h2>
+
+  <div class="card">
+    <p>👤 Name: Demo User</p>
+    <p>🌍 Country: Bangladesh</p>
+    <p>🪪 Identity: <b>Demo Verified</b></p>
+    <p>🤳 Selfie: <b>Demo Verified</b></p>
+  </div>
+</section>
+
+<!-- SECURITY -->
+<section id="security" class="page">
+  <h2>Demo Security</h2>
+
+  <div class="card">
+    <p>🔐 2FA: <b>Enabled — Demo</b></p>
+    <p>📱 Login Activity: Demo Device</p>
+    <p>🛡️ Security Alert: None</p>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section id="profile" class="page">
+  <h2>Demo Profile</h2>
+
+  <div class="card">
+    <p>Name: Demo User</p>
+    <p>Email: demo@example.com</p>
+    <p>Account: DEMO</p>
+  </div>
+</section>
+
+<!-- ADMIN -->
+<section id="admin" class="page">
+  <h2 class="admin-title">⚙️ Demo Admin Control</h2>
+
+  <div id="adminLogin" class="card">
+    <h3>Admin Login</h3>
+    <input id="adminPassword" type="password"
+           placeholder="Demo admin password">
+    <button onclick="adminLogin()">Login</button>
+    <p class="small">Demo only. Not real authentication.</p>
+  </div>
+
+  <div id="adminPanel" style="display:none">
+
+    <div class="card">
+      <h3>💰 Demo Balance</h3>
 
-  <main>
-
-    <!-- MARKET -->
-    <section id="market" class="page active">
-
-      <div class="hero">
-        <h1>A calmer market view.</h1>
-        <p>Explore simulated crypto prices.</p>
-      </div>
-
-      <div class="balance">
-        <small>Demo Portfolio Value</small>
-        <div class="amount">$12,840.76</div>
-        <span class="green">+4.28% DEMO</span>
-      </div>
-
-      <div class="grid">
-        <div class="card">
-          <small>Demo USDT</small>
-          <h2>8,420.00</h2>
-        </div>
+      <label>USDT</label>
+      <input id="adminUSDT" type="number">
 
-        <div class="card">
-          <small>Demo BTC</small>
-          <h2>0.0421</h2>
-        </div>
-      </div>
+      <label>BTC</label>
+      <input id="adminBTC" type="number">
 
-      <div class="card">
-        <h3>Markets</h3>
+      <button onclick="updateBalance()">
+        Update Demo Balance
+      </button>
+    </div>
 
-        <div class="coin">
-          <span>🟠 Bitcoin</span>
-          <b>$67,420</b>
-        </div>
+    <div class="card">
+      <h3>📈 Simulated Prices</h3>
 
-        <div class="coin">
-          <span>🔵 Ethereum</span>
-          <b>$3,420</b>
-        </div>
+      <label>BTC Price</label>
+      <input id="adminBTCPrice" type="number">
 
-        <div class="coin">
-          <span>🟣 Solana</span>
-          <b>$182.40</b>
-        </div>
+      <label>ETH Price</label>
+      <input id="adminETHPrice" type="number">
 
-        <div class="coin">
-          <span>🟢 USDT</span>
-          <b>$1.00</b>
-        </div>
-      </div>
+      <label>SOL Price</label>
+      <input id="adminSOLPrice" type="number">
 
-    </section>
-
+      <button onclick="updatePrices()">
+        Update Demo Prices
+      </button>
+    </div>
 
-    <!-- TRADE -->
-    <section id="trade" class="page">
-
-      <div class="hero">
-        <h1>Practice a trade.</h1>
-        <p>All orders are simulated.</p>
-      </div>
+    <div class="card">
+      <h3>🧾 Demo Controls</h3>
 
-      <div class="warning">
-        DEMO ONLY — Buy/Sell buttons do not move real cryptocurrency.
-      </div>
+      <button onclick="resetDemo()">
+        Reset All Demo Data
+      </button>
 
-      <div class="card">
+      <button class="red" onclick="adminLogout()">
+        Admin Logout
+      </button>
+    </div>
 
-        <label>Asset</label>
+  </div>
+</section>
 
-        <select id="asset">
-          <option>BTC / USDT</option>
-          <option>ETH / USDT</option>
-          <option>SOL / USDT</option>
-        </select>
+</main>
 
-        <label>Amount (USDT)</label>
+<nav>
+  <button onclick="showPage('market')"><span>📊</span>Market</button>
+  <button onclick="showPage('trade')"><span>📈</span>Trade</button>
+  <button onclick="showPage('wallet')"><span>💰</span>Wallet</button>
+  <button onclick="showPage('kyc')"><span>🪪</span>KYC</button>
+  <button onclick="showPage('security')"><span>🔐</span>Security</button>
+  <button onclick="showPage('profile')"><span>👤</span>Profile</button>
+  <button onclick="showPage('admin')"><span>⚙️</span>Admin</button>
+</nav>
 
-        <input id="tradeAmount"
-               type="number"
-               placeholder="100">
+<script>
 
-        <div class="grid">
-          <button class="buy" onclick="demoTrade('BUY')">
-            BUY DEMO
-          </button>
+const DEFAULT = {
+  usdt:8420,
+  btc:0.0421,
+  btcPrice:67420,
+  ethPrice:3420,
+  solPrice:182
+};
 
-          <button class="sell" onclick="demoTrade('SELL')">
-            SELL DEMO
-          </button>
-        </div>
+function data(){
+  return JSON.parse(localStorage.getItem("ashikDemo"))
+      || DEFAULT;
+}
 
-        <div id="tradeResult" class="notice">
-          No demo order yet.
-        </div>
+function save(d){
+  localStorage.setItem("ashikDemo",JSON.stringify(d));
+}
 
-      </div>
+function render(){
 
-      <div class="card">
-        <h3>Order History</h3>
+  const d=data();
 
-        <div id="orders">
-          <div class="row">
-            <span>BTC/USDT</span>
-            <span class="green">BUY • DEMO</span>
-          </div>
+  document.getElementById("usdt").innerText =
+    Number(d.usdt).toFixed(2)+" USDT";
 
-          <div class="row">
-            <span>SOL/USDT</span>
-            <span class="red">SELL • DEMO</span>
-          </div>
-        </div>
-      </div>
+  document.getElementById("btc").innerText =
+    Number(d.btc).toFixed(4)+" BTC";
 
-    </section>
+  document.getElementById("btcMarket").innerText =
+    "$"+Number(d.btcPrice).toLocaleString();
 
+  document.getElementById("ethMarket").innerText =
+    "$"+Number(d.ethPrice).toLocaleString();
 
-    <!-- WALLET -->
-    <section id="wallet" class="page">
+  document.getElementById("solMarket").innerText =
+    "$"+Number(d.solPrice).toLocaleString();
 
-      <div class="hero">
-        <h1>Your practice wallet</h1>
-        <p>Simulated balances only.</p>
-      </div>
+  document.getElementById("portfolio").innerText =
+    "$"+(
+      Number(d.usdt)+
+      Number(d.btc)*Number(d.btcPrice)
+    ).toLocaleString(undefined,{
+      minimumFractionDigits:2,
+      maximumFractionDigits:2
+    });
+}
 
-      <div class="warning">
-        ⚠ DEMO WALLET — No real deposit or withdrawal is connected.
-      </div>
+function showPage(id){
 
-      <div class="balance">
-        <small>Total Demo Balance</small>
-        <div class="amount">$12,840.76</div>
-      </div>
+  document.querySelectorAll(".page")
+    .forEach(x=>x.classList.remove("active"));
 
-      <div class="card">
+  document.getElementById(id)
+    .classList.add("active");
 
-        <h3>Holdings</h3>
+  if(id==="admin"){
+    loadAdmin();
+  }
 
-        <div class="coin">
-          <span>₿ BTC</span>
-          <b>0.0421</b>
-        </div>
+  window.scrollTo(0,0);
+}
 
-        <div class="coin">
-          <span>Ξ ETH</span>
-          <b>1.25</b>
-        </div>
+function demoTrade(type){
 
-        <div class="coin">
-          <span>◎ SOL</span>
-          <b>18.50</b>
-        </div>
+  const amount =
+    Number(document.getElementById("tradeAmount").value);
 
-        <div class="coin">
-          <span>₮ USDT</span>
-          <b>8,420.00</b>
-        </div>
+  if(!amount || amount<=0){
+    document.getElementById("tradeMessage").innerText =
+      "Enter a demo amount.";
+    return;
+  }
 
-      </div>
+  document.getElementById("tradeMessage").innerText =
+    type+" order completed — DEMO ONLY.";
+}
 
-      <div class="card">
+function adminLogin(){
 
-        <h3>Wallet Actions</h3>
+  /*
+   * DEMO password only.
+   * This is NOT secure authentication.
+   */
+  const password =
+    document.getElementById("adminPassword").value;
 
-        <button class="primary"
-                onclick="demoWallet()">
-          DEMO DEPOSIT / WITHDRAW
-        </button>
+  if(password==="admin123"){
 
-        <div id="walletMessage" class="notice">
-          These actions are simulation only.
-        </div>
+    document.getElementById("adminLogin")
+      .style.display="none";
 
-      </div>
+    document.getElementById("adminPanel")
+      .style.display="block";
 
-    </section>
+    loadAdmin();
 
+  }else{
+    alert("Wrong demo password.");
+  }
+}
 
-    <!-- KYC -->
-    <section id="kyc" class="page">
+function loadAdmin(){
 
-      <div class="hero">
-        <h1>Demo KYC</h1>
-        <p>Fictional verification status.</p>
-      </div>
+  const d=data();
 
-      <div class="warning">
-        DEMO/SIMULATION — Do not enter real identity documents,
-        selfies or sensitive information.
-      </div>
+  document.getElementById("adminUSDT").value=d.usdt;
+  document.getElementById("adminBTC").value=d.btc;
+  document.getElementById("adminBTCPrice").value=d.btcPrice;
+  document.getElementById("adminETHPrice").value=d.ethPrice;
+  document.getElementById("adminSOLPrice").value=d.solPrice;
+}
 
-      <div class="card">
+function updateBalance(){
 
-        <div class="row">
-          <span>Name</span>
-          <b>Alex Rahman</b>
-        </div>
+  const d=data();
 
-        <div class="row">
-          <span>Date of Birth</span>
-          <b>01 Jan 1995</b>
-        </div>
+  d.usdt=Number(document.getElementById("adminUSDT").value);
+  d.btc=Number(document.getElementById("adminBTC").value);
 
-        <div class="row">
-          <span>Country</span>
-          <b>Demo Country</b>
-        </div>
+  save(d);
+  render();
 
-        <div class="row">
-          <span>Identity Document</span>
-          <span class="status">DEMO VERIFIED</span>
-        </div>
+  alert("Demo balance updated.");
+}
 
-        <div class="row">
-          <span>Selfie Verification</span>
-          <span class="status">DEMO VERIFIED</span>
-        </div>
+function updatePrices(){
 
-      </div>
+  const d=data();
 
-    </section>
+  d.btcPrice=
+    Number(document.getElementById("adminBTCPrice").value);
 
+  d.ethPrice=
+    Number(document.getElementById("adminETHPrice").value);
 
-    <!-- SECURITY -->
-    <section id="security" class="page">
+  d.solPrice=
+    Number(document.getElementById("adminSOLPrice").value);
 
-      <div class="hero">
-        <h1>Security</h1>
-        <p>Demo security dashboard.</p>
-      </div>
+  save(d);
+  render();
 
-      <div class="warning">
-        DEMO/SIMULATION — No real passwords, private keys,
-        payment information or authentication secrets are stored.
-      </div>
+  alert("Demo prices updated.");
+}
 
-      <div class="card">
+function resetDemo(){
 
-        <h3>2FA Status</h3>
+  if(confirm("Reset all demo data?")){
+    localStorage.removeItem("ashikDemo");
+    render();
+    loadAdmin();
+    alert("Demo data reset.");
+  }
+}
 
-        <div class="row">
-          <span>Two-Factor Authentication</span>
-          <span class="status">DEMO ON</span>
-        </div>
+function adminLogout(){
 
-      </div>
+  document.getElementById("adminPanel")
+    .style.display="none";
 
-      <div class="card">
+  document.getElementById("adminLogin")
+    .style.display="block";
 
-        <h3>Login Activity</h3>
+  document.getElementById("adminPassword").value="";
+}
 
-        <div class="row">
-          <span>Android Device</span>
-          <span>DEMO • Today</span>
-        </div>
+render();
 
-        <div class="row">
-          <span>Chrome Browser</span>
-          <span>DEMO • Yesterday</span>
-        </div>
-
-      </div>
-
-      <div class="card">
-
-        <h3>Security Alerts</h3>
-
-        <div class="row">
-          <span>New demo login detected</span>
-          <span class="status">SAFE</span>
-        </div>
-
-        <div class="row">
-          <span>Demo 2FA enabled</span>
-          <span class="status">SAFE</span>
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- PROFILE -->
-    <section id="profile" class="page">
-
-      <div class="hero">
-        <h1>Make it yours.</h1>
-        <p>Demo account profile.</p>
-      </div>
-
-      <div class="card">
-
-        <h3>Demo Profile</h3>
-
-        <div class="row">
-          <span>Name</span>
-          <b>Alex Rahman</b>
-        </div>
-
-        <div class="row">
-          <span>Account</span>
-          <span class="status">DEMO</span>
-        </div>
-
-        <div class="row">
-          <span>KYC</span>
-          <span class="status">SIMULATION</span>
-        </div>
-
-      </div>
-
-      <div class="card">
-
-        <h3>Important</h3>
-
-        <div class="notice">
-          This website is a demonstration project.
-          It is not connected to a real exchange,
-          blockchain wallet, bank account or payment system.
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- NAVIGATION -->
-  <nav>
-
-    <button class="active"
-            onclick="showPage('market', this)">
-      📊<br>Market
-    </button>
-
-    <button onclick="showPage('trade', this)">
-      📈<br>Trade
-    </button>
-
-    <button onclick="showPage('wallet', this)">
-      💰<br>Wallet
-    </button>
-
-    <button onclick="showPage('kyc', this)">
-      🪪<br>KYC
-    </button>
-
-    <button onclick="showPage('security', this)">
-      🔐<br>Security
-    </button>
-
-    <button onclick="showPage('profile', this)">
-      👤<br>Profile
-    </button>
-
-  </nav>
-
-
-  <script>
-
-    function showPage(pageId, button) {
-
-      document.querySelectorAll('.page')
-        .forEach(page => {
-          page.classList.remove('active');
-        });
-
-      document.getElementById(pageId)
-        .classList.add('active');
-
-      document.querySelectorAll('nav button')
-        .forEach(btn => {
-          btn.classList.remove('active');
-        });
-
-      button.classList.add('active');
-
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
-
-
-    function demoTrade(type) {
-
-      const amount =
-        document.getElementById('tradeAmount').value || 0;
-
-      const asset =
-        document.getElementById('asset').value;
-
-      document.getElementById('tradeResult').innerHTML =
-        "✓ " + type + " order created for " +
-        amount + " USDT of " +
-        asset +
-        ". <b>DEMO ONLY.</b>";
-
-      const orders =
-        document.getElementById('orders');
-
-      const newOrder =
-        document.createElement('div');
-
-      newOrder.className = 'row';
-
-      newOrder.innerHTML =
-        "<span>" + asset + "</span>" +
-        "<span class='" +
-        (type === 'BUY' ? 'green' : 'red') +
-        "'>" +
-        type +
-        " • DEMO</span>";
-
-      orders.prepend(newOrder);
-    }
-
-
-    function demoWallet() {
-
-      document.getElementById('walletMessage').innerHTML =
-        "✓ Demo wallet action completed. " +
-        "No real cryptocurrency was deposited or withdrawn.";
-    }
-
-  </script>
+</script>
 
 </body>
 </html>
