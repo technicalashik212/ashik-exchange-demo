@@ -1210,3 +1210,182 @@ render();
 
 </body>
 </html>
+<!-- SOLANA DEVNET WALLET -->
+<section class="card">
+  <h2>🧪 Solana Devnet Wallet</h2>
+
+  <p>
+    <b>Network:</b> Solana Devnet
+  </p>
+
+  <p>
+    <b>Wallet:</b>
+    <span id="walletAddress">Not connected</span>
+  </p>
+
+  <p>
+    <b>Devnet SOL:</b>
+    <span id="solBalance">0</span>
+  </p>
+
+  <button onclick="connectSolanaWallet()">
+    🔗 Connect Wallet
+  </button>
+
+  <button onclick="getDevnetSOL()">
+    💧 Request Devnet SOL
+  </button>
+
+  <p id="walletMessage"></p>
+</section>
+
+<script>
+const DEVNET_RPC =
+  "https://api.devnet.solana.com";
+
+let solanaWallet = null;
+
+async function connectSolanaWallet() {
+
+  if (!window.solana || !window.solana.isPhantom) {
+
+    document.getElementById("walletMessage").innerText =
+      "Phantom Wallet পাওয়া যায়নি। Phantom browser extension/app ব্যবহার করুন।";
+
+    return;
+  }
+
+  try {
+
+    const response =
+      await window.solana.connect();
+
+    solanaWallet = response.publicKey;
+
+    document.getElementById("walletAddress").innerText =
+      solanaWallet.toString();
+
+    await getSolBalance();
+
+    document.getElementById("walletMessage").innerText =
+      "✅ Solana Devnet wallet connected.";
+
+  } catch (error) {
+
+    document.getElementById("walletMessage").innerText =
+      "Wallet connection cancelled.";
+
+  }
+}
+
+
+async function getSolBalance() {
+
+  if (!solanaWallet) {
+    return;
+  }
+
+  try {
+
+    const response = await fetch(
+      DEVNET_RPC,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+          jsonrpc: "2.0",
+          id: 1,
+          method: "getBalance",
+
+          params: [
+            solanaWallet.toString()
+          ]
+
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    const lamports =
+      data.result.value;
+
+    const sol =
+      lamports / 1000000000;
+
+    document.getElementById("solBalance")
+      .innerText = sol.toFixed(4);
+
+  } catch (error) {
+
+    document.getElementById("walletMessage").innerText =
+      "Balance পাওয়া যায়নি।";
+
+  }
+}
+
+
+async function getDevnetSOL() {
+
+  if (!solanaWallet) {
+
+    document.getElementById("walletMessage").innerText =
+      "প্রথমে Connect Wallet চাপুন.";
+
+    return;
+  }
+
+  try {
+
+    const response = await fetch(
+      DEVNET_RPC,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+          jsonrpc: "2.0",
+          id: 1,
+          method: "requestAirdrop",
+
+          params: [
+            solanaWallet.toString(),
+            1000000000
+          ]
+
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.error) {
+
+      document.getElementById("walletMessage").innerText =
+        "Devnet faucet limit reached. পরে আবার চেষ্টা করুন.";
+
+      return;
+    }
+
+    document.getElementById("walletMessage").innerText =
+      "💧 1 Devnet SOL airdrop requested.";
+
+    setTimeout(getSolBalance, 5000);
+
+  } catch (error) {
+
+    document.getElementById("walletMessage").innerText =
+      "Airdrop request failed.";
+
+  }
+}
+</script>
